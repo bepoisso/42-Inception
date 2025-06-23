@@ -1,0 +1,28 @@
+
+[server]
+
+[mysqld]
+
+user                    = mysql
+pid-file                = /run/mysqld/mysqld.pid
+basedir                 = /usr
+datadir                 = /var/lib/mysql
+socket                  = /run/mysqld/mysqld.sock
+tmpdir                  = /tmp
+lc-messages-dir         = /usr/share/mysql
+lc-messages             = en_US
+skip-external-locking
+
+bind-address            = *
+port                    = 3306
+
+character-set-server    = utf8mb4
+collation-server        = utf8mb4_general_ci
+
+
+[embedded]
+
+
+[mariadb]
+
+[mariadb-10.5]
