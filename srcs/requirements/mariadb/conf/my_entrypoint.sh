@@ -1,12 +1,20 @@
 #!/bin/sh
-set -e  # Stopper en cas d'erreur
+set -e
 
-# Lancer MySQL en arrière-plan
-mysqld_safe --skip-networking &
-sleep 5  # Laisser le temps à MySQL de se lancer
+echo ">> Initialisation de la base MariaDB..."
 
-# Création BDD et utilisateurs
-mysql -u root <<-EOSQL
+# Création du socket
+mkdir -p /run/mysqld
+chown -R mysql:mysql /run/mysqld
+
+# Vérifie si la base est déjà initialisée
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+  echo ">> Démarrage temporaire de MariaDB..."
+  mysqld_safe --skip-networking &
+  sleep 5
+
+  echo ">> Configuration initiale de la base..."
+  mysql -u root <<-EOSQL
     CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
     CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
     GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%';
@@ -14,8 +22,11 @@ mysql -u root <<-EOSQL
     FLUSH PRIVILEGES;
 EOSQL
 
-# Éteindre proprement le serveur de démarrage
-mysqladmin -uroot -p"${MYSQL_ROOT_PASSWORD}" shutdown
+  echo ">> Extinction de la base temporaire..."
+  mysqladmin -uroot -p"${MYSQL_ROOT_PASSWORD}" shutdown
+else
+  echo ">> Base MariaDB déjà initialisée, skip de l'init."
+fi
 
-# Redémarrer MySQL correctement (comme processus principal)
-exec mysqld_safe
+echo ">> Lancement final de MariaDB..."
+exec mysqld

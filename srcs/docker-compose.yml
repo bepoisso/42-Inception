@@ -5,7 +5,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/wordpress
+      - /home/bepoisso/data/wordpress:/var/www/wordpress
     depends_on:
       - wordpress
     networks:
@@ -16,7 +16,7 @@ services:
     build: ./requirements/wordpress
     container_name: wordpress
     volumes:
-      - wordpress_data:/var/www/wordpress
+      - /home/bepoisso/data/wordpress:/var/www/wordpress
     env_file:
       - .env
     environment:
@@ -38,7 +38,9 @@ services:
     build: ./requirements/mariadb
     container_name: mariadb
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - /home/bepoisso/data/mariadb:/var/lib/mysql
+    tmpfs:
+      - /run/mysqld
     env_file:
       - .env
     environment:
