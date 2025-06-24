@@ -28,6 +28,9 @@ services:
       - WP_ADMIN_USER=${WP_ADMIN_USER}
       - WP_ADMIN_PWD=${WP_ADMIN_PWD}
       - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+      - WP_USER=${WP_USER}
+      - WP_PWD=${WP_PWD}
+      - WP_EMAIL=${WP_EMAIL}
     depends_on:
       - mariadb
     networks:

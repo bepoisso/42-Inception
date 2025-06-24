@@ -58,6 +58,15 @@ if ! wp core is-installed --path="$WORDPRESS_PATH" --allow-root; then
         --path="$WORDPRESS_PATH"
 fi
 
+# Ajouter un second utilisateur WordPress si il n'existe pas déjà
+
+if ! wp user get "$WP_USER" --allow-root --path="$WORDPRESS_PATH" >/dev/null 2>&1; then
+    echo ">> Création du second utilisateur '$WP_USER'..."
+    wp user create "$WP_USER" "$WP_EMAIL" --role=author --user_pass="$WP_PWD" --allow-root --path="$WORDPRESS_PATH"
+else
+    echo ">> L'utilisateur '$WP_USER' existe déjà, pas de création."
+fi
+
 # Lancement de PHP-FPM
 mkdir -p /run/php
 exec /usr/sbin/php-fpm7.4 -F
