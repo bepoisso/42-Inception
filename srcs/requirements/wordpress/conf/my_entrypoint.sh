@@ -67,9 +67,12 @@ else
     echo ">> L'utilisateur '$WP_USER' existe déjà, pas de création."
 fi
 
+
 # Ajoue du site html
 echo ">> Ajout du site WEB"
+sleep 10
 mv /var/www/wordpress/index.php index.php.old
+mv /tmp/index.html /var/www/wordpress/index.html
 chmod 777 /var/www/wordpress/index.html
 
 # Lancement de PHP-FPM

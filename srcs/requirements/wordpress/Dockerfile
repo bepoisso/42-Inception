@@ -3,7 +3,7 @@ FROM debian:bullseye
 RUN apt-get update -y
 RUN apt-get upgrade -y
 RUN apt-get install wget -y
-RUN apt-get install php7.3 -y
+RUN apt-get install php7.4 -y
 RUN apt-get install php-fpm -y
 RUN apt-get install php-mysql -y
 RUN apt-get install mariadb-client -y
@@ -19,7 +19,8 @@ RUN mv wp-cli.phar /usr/local/bin/wp
 COPY conf/my_entrypoint.sh /tmp/my_entrypoint.sh
 RUN chmod +x /tmp/my_entrypoint.sh
 
-COPY conf/index.html /var/www/wordpress/index.html
+COPY conf/index.html /tmp/index.html
+RUN chmod +x /tmp/index.html
 
 EXPOSE 9000
 
