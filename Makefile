@@ -17,10 +17,6 @@ down:
 	@echo ">> Arrêt et suppression des conteneurs, réseaux et volumes..."
 	@$(COMPOSE) $(COMPOSE_CMD) -f $(COMPOSE_FILE) down -v
 
-logs:
-	@echo ">> Affichage des logs (Ctrl+C pour quitter)..."
-	@$(COMPOSE) $(COMPOSE_CMD) -f $(COMPOSE_FILE) logs -f
-
 restart: down up
 	@echo ">> Redémarrage complet des services."
 
