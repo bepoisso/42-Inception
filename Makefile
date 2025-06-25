@@ -17,7 +17,11 @@ down:
 	@echo ">> Arrêt et suppression des conteneurs, réseaux et volumes..."
 	@$(COMPOSE) $(COMPOSE_CMD) -f $(COMPOSE_FILE) down -v
 
-restart: down up
+re: down up
 	@echo ">> Redémarrage complet des services."
 
-.PHONY: build up down logs restart
+fclean: down
+	@echo ">> Supression total des services."
+	@docker system prune -af
+
+.PHONY: build up down logs re fclean
