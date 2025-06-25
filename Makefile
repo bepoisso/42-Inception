@@ -17,7 +17,7 @@ down:
 	@echo ">> Arrêt et suppression des conteneurs, réseaux et volumes..."
 	@$(COMPOSE) $(COMPOSE_CMD) -f $(COMPOSE_FILE) down -v
 
-re: down up
+re: down build up
 	@echo ">> Redémarrage complet des services."
 
 fclean: down

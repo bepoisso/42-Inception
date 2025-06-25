@@ -3,14 +3,15 @@ set -e
 
 echo ">> Initialisation de la base MariaDB..."
 
-# Création du socket dir
+# Création du socket dir et permissions
 chown -R mysql:mysql /var/lib/mysql /run/mysqld
+mkdir -p /run/mysqld
 
 # Initialisation si la base n’existe pas encore
 if [ ! -d "/var/lib/mysql/mysql" ]; then
   echo ">> Démarrage temporaire de MariaDB..."
   mysqld --skip-networking --socket=/run/mysqld/mysqld.sock &
-  
+
   echo ">> Attente de la disponibilité du serveur MariaDB..."
   for i in $(seq 1 30); do
     if mysqladmin ping --socket=/run/mysqld/mysqld.sock --silent; then
@@ -23,9 +24,10 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
   echo ">> Configuration initiale de la base..."
   mysql --socket=/run/mysqld/mysqld.sock -u root <<-EOSQL
     CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
-    CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
-    GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%';
-    ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+    CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+    GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%';
+    ALTER USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
     FLUSH PRIVILEGES;
 EOSQL
 

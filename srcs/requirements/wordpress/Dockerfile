@@ -19,9 +19,7 @@ RUN mv wp-cli.phar /usr/local/bin/wp
 COPY conf/my_entrypoint.sh /tmp/my_entrypoint.sh
 RUN chmod +x /tmp/my_entrypoint.sh
 
-RUN mv /var/www/wordpress/index.php index.php.old
 COPY conf/index.html /var/www/wordpress/index.html
-RUN chmod 777 /var/www/wordpress/index.html
 
 EXPOSE 9000
 
