@@ -69,11 +69,15 @@ fi
 
 
 # Ajoue du site html
-echo ">> Ajout du site WEB"
-sleep 10
-mv /var/www/wordpress/index.php index.php.old
-mv /tmp/index.html /var/www/wordpress/index.html
-chmod 777 /var/www/wordpress/index.html
+if [ ! -f "$WORDPRESS_PATH/wp-config.php" ]; then
+    echo ">> Ajout du site WEB"
+    sleep 10
+    mv /var/www/wordpress/index.php index.php.old
+    mv /tmp/index.html /var/www/wordpress/index.html
+    chmod 777 /var/www/wordpress/index.html
+else
+    echo ">> site WEB Deja ajouter"
+fi
 
 # Lancement de PHP-FPM
 mkdir -p /run/php

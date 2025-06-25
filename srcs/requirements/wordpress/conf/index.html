@@ -351,5 +351,185 @@
       document.body.classList.toggle('dark-theme');
     });
   </script>
-</body>
+
+  <!-- Comment Bubble -->
+<div id="comment-bubble">
+  <div id="comment-header">
+    <div class="macos-dots">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+    </div>
+    <div class="header-title">
+      💬 Comment
+    </div>
+  </div>
+
+  <div id="comment-display"></div>
+  <textarea id="comment-input" placeholder="Leave a comment..."></textarea>
+  <button id="send-comment">Send</button>
+</div>
+
+<style>
+  #comment-bubble {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 280px;
+    background: rgba(245, 245, 247, 0.95);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    border-radius: 18px;
+    padding: 10px;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, sans-serif;
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  #comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .macos-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot.red { background-color: #ff605c; }
+  .dot.yellow { background-color: #ffbd44; }
+  .dot.green { background-color: #00ca4e; }
+
+  .header-title {
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #comment-display {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .comment-item {
+    background: white;
+    border-radius: 12px;
+    padding: 6px 10px;
+    position: relative;
+    word-wrap: break-word;
+  }
+
+  .comment-item button {
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    background: none;
+    border: none;
+    color: #888;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #comment-input {
+    resize: none;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    min-height: 50px;
+    font-family: inherit;
+  }
+
+  #send-comment {
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  #send-comment:hover {
+    background-color: #005fcc;
+  }
+
+  body.dark-theme #comment-bubble {
+    background: rgba(30, 30, 30, 0.95);
+    color: white;
+  }
+
+  body.dark-theme #comment-input {
+    background: #1e1e1e;
+    color: white;
+    border: 1px solid #555;
+  }
+
+  body.dark-theme .comment-item {
+    background: #2a2a2a;
+    color: white;
+  }
+
+  body.dark-theme .comment-item button {
+    color: #bbb;
+  }
+</style>
+
+<script>
+  const sendBtn = document.getElementById('send-comment');
+  const input = document.getElementById('comment-input');
+  const display = document.getElementById('comment-display');
+
+  // Charger les commentaires sauvegardés
+  const savedComments = JSON.parse(localStorage.getItem('comments') || '[]');
+  savedComments.forEach(text => {
+    const div = document.createElement('div');
+    div.className = 'comment-item';
+    div.innerHTML = `${text} <button onclick="removeComment(this)">×</button>`;
+    display.appendChild(div);
+  });
+
+  function removeComment(btn) {
+    const item = btn.parentElement;
+    item.remove();
+    saveComments();
+  }
+
+  function saveComments() {
+    const all = [...document.querySelectorAll('.comment-item')].map(div =>
+      div.childNodes[0].textContent.trim()
+    );
+    localStorage.setItem('comments', JSON.stringify(all));
+  }
+
+  sendBtn.addEventListener('click', () => {
+    const text = input.value.trim();
+    if (text) {
+      const div = document.createElement('div');
+      div.className = 'comment-item';
+      div.innerHTML = `${text} <button onclick="removeComment(this)">×</button>`;
+      display.prepend(div);
+      input.value = '';
+      saveComments();
+    }
+  });
+</script>
 </html>
