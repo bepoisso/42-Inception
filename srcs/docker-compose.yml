@@ -4,6 +4,7 @@ services:
     build: ./requirements/mariadb
     restart: unless-stopped
     env_file: .env
+    image: mariadb:inception
     volumes:
       - mariadb:/var/lib/mysql
     networks:
@@ -16,6 +17,7 @@ services:
     build: ./requirements/nginx
     restart: on-failure
     env_file: .env
+    image: nginx:inception
     volumes:
       - wordpress:/var/www/wordpress
     ports:
@@ -29,6 +31,7 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress
     restart: on-failure
+    image: wordpress:inception    
     env_file: .env
     volumes:
       - wordpress:/var/www/wordpress
@@ -43,6 +46,7 @@ services:
     container_name: irc
     build: ./requirements/irc
     restart: on-failure
+    image: irc:inception
     env_file: .env
     ports:
       - "6667:6667"
@@ -51,16 +55,19 @@ services:
 
 networks:
   inception:
+    name : inception
     driver: bridge
 
 volumes:
   wordpress:
+    name: wordpress
     driver: local
     driver_opts:
       type: "none"
       o: "bind"
       device: "/home/${USER}/data/wordpress"
   mariadb:
+    name: mariadb
     driver: local
     driver_opts:
       type: "none"

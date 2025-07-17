@@ -23,4 +23,4 @@ RUN chmod +x /usr/local/bin/my_entrypoint.sh
 
 WORKDIR /var/www/wordpress
 
-CMD ["/usr/local/bin/my_entrypoint.sh"]
+ENTRYPOINT ["bash", "/usr/local/bin/my_entrypoint.sh"]
